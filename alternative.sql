@@ -1,33 +1,33 @@
-######### TABLES #########
+--######### TABLES #########
 
-DROP TABLE IF EXISTS course;
+DROP TABLE IF EXISTS course CASCADE;
 CREATE TABLE course (
-    course_id INT AUTO_INCREMENT PRIMARY KEY,
+    course_id SERIAL PRIMARY KEY,
     presence BOOLEAN NOT NULL,
     start_at DATE NOT NULL,
     end_at DATE NOT NULL,
     year INT NOT NULL
 );
 
-DROP TABLE IF EXISTS trainee;
+DROP TABLE IF EXISTS trainee CASCADE;
 CREATE TABLE trainee (
-    trainee_id INT AUTO_INCREMENT PRIMARY KEY,
+    trainee_id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL
 );
 
-DROP TABLE IF EXISTS instructor;
+DROP TABLE IF EXISTS instructor CASCADE;
 CREATE TABLE instructor (
-    instructor_id INT AUTO_INCREMENT PRIMARY KEY,
+    instructor_id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL
 );
 
-DROP TABLE IF EXISTS teaching_team;
+DROP TABLE IF EXISTS teaching_team CASCADE;
 CREATE TABLE teaching_team (
-    teaching_team_id INT AUTO_INCREMENT PRIMARY KEY
+    teaching_team_id SERIAL PRIMARY KEY
 );
 
-DROP TABLE IF EXISTS teachingteam_instructor;
+DROP TABLE IF EXISTS teachingteam_instructor CASCADE;
 CREATE TABLE teachingteam_instructor (
     teaching_team_id INT,
     instructor_id INT,
@@ -36,7 +36,7 @@ CREATE TABLE teachingteam_instructor (
     PRIMARY KEY (teaching_team_id, instructor_id)
 );
 
-DROP TABLE IF EXISTS enrollment;
+DROP TABLE IF EXISTS enrollment CASCADE;
 CREATE TABLE enrollment (
     trainee_id INT,
     course_id INT,
@@ -46,7 +46,7 @@ CREATE TABLE enrollment (
     PRIMARY KEY (trainee_id, course_id)
 );
 
-DROP TABLE IF EXISTS teaches;
+DROP TABLE IF EXISTS teaches CASCADE;
 CREATE TABLE teaches (
     teaching_team_id INT,
     course_id INT,
@@ -55,45 +55,50 @@ CREATE TABLE teaches (
     PRIMARY KEY (teaching_team_id, course_id)
 );
 
-######### CONSTRAINTS #########
 
-# Den nedstående DELIMITER TING var åbenbart nødvendig for at syntaksen
-# for Trigger'en var valid. wodoo magic
+--######### FUNCTIONS #########
 
-DELIMITER /
-Create Trigger MaxTwoTeamsPerInstructor
-    Before Insert
-    On teachingteam_instructor 
-    For Each Row
-Begin
-
-If Exists (
-	Select 1
-	From teachingteam_instructor
-	Where instructor_id = New.instructor_id
-	Having Count(*) >= 2 -- Max count - 1
-	)
-THEN	
-   SIGNAL SQLSTATE '45000' 
-   SET MESSAGE_TEXT = 'Instructor can only be allocated to two teaching teams at maximum';
+--https://w3resource.com/PostgreSQL/postgresql-triggers.php
+CREATE OR REPLACE FUNCTION check_max_two_teams_for_instructors()
+	RETURNS TRIGGER AS
+$$
+BEGIN
+IF EXISTS (SELECT 1 
+FROM teachingteam_instructor
+WHERE instructor_id = NEW.instructor_id
+HAVING COUNT(*)>= 2)
+THEN 
+RAISE EXCEPTION 'Instructor can only be allocated to two teaching teams at maximum'; 
 END IF;
-
-End; /
-
-
-INSERT INTO teaching_team (teaching_team_id) VALUES (0); /
-INSERT INTO teaching_team (teaching_team_id) VALUES (0); / 
-INSERT INTO teaching_team (teaching_team_id) VALUES (0); /
-
-INSERT INTO instructor (name) VALUES ('HARRY'); /
-
-INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (1, 1) /
-INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (2, 1) /
-
-# Instructor med ID 1 kan nu ikke sættes på teaching team 3, da han allerede er på 1 & 2.
-INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (3, 1) /
-
-select * from teaching_team; /
-select * from teachingteam_instructor; /
+RETURN NEW;
+END;
+$$
+LANGUAGE 'plpgsql';
 
 
+--######### TRIGGERS #########
+
+Create Trigger MaxTwoTeamsPerInstructor
+    BEFORE INSERT
+    ON teachingteam_instructor 
+    FOR EACH ROW
+	EXECUTE PROCEDURE check_max_two_teams_for_instructors();
+
+
+--######### TESTING #########
+
+-- Create 3 teaching teams with id 1,2,3
+INSERT INTO teaching_team (teaching_team_id) VALUES (1);
+INSERT INTO teaching_team (teaching_team_id) VALUES (2);
+INSERT INTO teaching_team (teaching_team_id) VALUES (3);
+
+-- Create instructor, will get id 1
+INSERT INTO instructor (name) VALUES ('HARRY');
+
+-- assign instructor with id 1 to teaching team 1 and 2
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (1, 1);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (2, 1);
+
+-- Should fail
+-- Instructor with id 1 cannot be assigned to teaching team 3, as he is already assigned to teaching team 1 and 2
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (3, 1); 

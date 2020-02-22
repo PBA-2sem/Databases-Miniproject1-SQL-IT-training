@@ -1,11 +1,14 @@
 --######### TABLES #########
 
+drop type if exists season cascade;
+create type season as enum ('Spring', 'Summer', 'Fall', 'Winter');
+
 DROP TABLE IF EXISTS course CASCADE;
 CREATE TABLE course (
     course_id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
     presence BOOLEAN NOT NULL,
-    start_at DATE NOT NULL,
-    end_at DATE NOT NULL,
+    season season not null, 
     year INT NOT NULL
 );
 
@@ -55,10 +58,21 @@ CREATE TABLE teaches (
     PRIMARY KEY (teaching_team_id, course_id)
 );
 
+--######### CONSTRAINTS #########
+
+ALTER TABLE course ADD CONSTRAINT unique_courses UNIQUE (name, presence, season, year);
+ALTER TABLE trainee ADD CONSTRAINT unique_trainees UNIQUE (name, email);
+ALTER TABLE instructor ADD CONSTRAINT unique_instructors UNIQUE (name);
+
+--TODO
+-- teaching team
+-- teachingteam_instructor
+-- enrollment
+-- teaches
+
 
 --######### FUNCTIONS #########
 
---https://w3resource.com/PostgreSQL/postgresql-triggers.php
 CREATE OR REPLACE FUNCTION check_max_two_teams_for_instructors()
 	RETURNS TRIGGER AS
 $$
@@ -79,26 +93,63 @@ LANGUAGE 'plpgsql';
 --######### TRIGGERS #########
 
 Create Trigger MaxTwoTeamsPerInstructor
-    BEFORE INSERT
-    ON teachingteam_instructor 
-    FOR EACH ROW
-	EXECUTE PROCEDURE check_max_two_teams_for_instructors();
+BEFORE INSERT
+ON teachingteam_instructor 
+FOR EACH ROW
+EXECUTE PROCEDURE check_max_two_teams_for_instructors();
 
 
---######### TESTING #########
+--######### DUMMY DATA #########
+
+-- Create Course
+insert into course (name,presence, season, year) values ('Databases', true, 'Spring', 2020); -- "offline"
+insert into course (name,presence, season, year) values ('Test', false, 'Spring', 2020); -- online
+insert into course (name,presence, season, year) values ('Large Systems', false, 'Spring', 2020); -- online
+insert into course (name,presence, season, year) values ('System Integration', false, 'Spring', 2020); -- online
+
+-- Create Trainee TODO
+
+
+-- Create Instructor, will get id 1
+INSERT INTO instructor (name) VALUES ('HARRY');
 
 -- Create 3 teaching teams with id 1,2,3
 INSERT INTO teaching_team (teaching_team_id) VALUES (1);
 INSERT INTO teaching_team (teaching_team_id) VALUES (2);
 INSERT INTO teaching_team (teaching_team_id) VALUES (3);
 
--- Create instructor, will get id 1
-INSERT INTO instructor (name) VALUES ('HARRY');
-
--- assign instructor with id 1 to teaching team 1 and 2
+-- Assign instructor with id 1 to teaching team 1 and 2
 INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (1, 1);
 INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (2, 1);
 
+-- Enrollment TODO
+
+-- Teaches TODO
+
+
+--######### TESTING #########
+
+-- Should fail
+-- Course with same name, presence, season, year cannot be inserted multiple times
+-- insert into course (name,presence, season, year) values ('Databases', true, 'Spring', 2020);
+
+-- Should fail
+-- Trainee with same name, email cannot be inserted multiple times
+
+-- Should fail
+-- Instructor with same name cannot be inserted multiple times
+--INSERT INTO instructor (name) VALUES ('HARRY');
+
+-- TODO NOT NEEDED?
+-- teaching_team 
+
 -- Should fail
 -- Instructor with id 1 cannot be assigned to teaching team 3, as he is already assigned to teaching team 1 and 2
-INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (3, 1); 
+-- INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (3, 1); 
+
+-- Enrollment TODO
+
+-- Teaches TODO
+
+
+

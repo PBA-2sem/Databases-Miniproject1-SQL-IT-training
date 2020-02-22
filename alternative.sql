@@ -84,6 +84,22 @@ END;
 $$
 LANGUAGE 'plpgsql';
 
+CREATE OR REPLACE FUNCTION min_two_instructors_per_teaching_team()
+    RETURNS TRIGGER AS
+$$
+BEGIN
+IF EXISTS (SELECT 1 
+FROM teachingteam_instructor
+WHERE teaching_team_id = NEW.teaching_team_id
+HAVING COUNT(*) < 2)
+THEN 
+RAISE EXCEPTION 'A course must have a teaching team consisting of atleast two instructors'; 
+END IF;
+RETURN NEW;
+END;
+$$
+LANGUAGE 'plpgsql';
+
 
 --######### TRIGGERS #########
 
@@ -93,6 +109,12 @@ ON teachingteam_instructor
 FOR EACH ROW
 EXECUTE PROCEDURE check_max_two_teams_for_instructors();
 
+
+Create Trigger MinTwoInstructorPerTeachingTeam
+BEFORE INSERT
+ON teaches 
+FOR EACH ROW
+EXECUTE PROCEDURE min_two_instructors_per_teaching_team();
 
 --######### DUMMY DATA #########
 
@@ -110,21 +132,24 @@ insert into trainee (name, email) values ('Alexander', 'aa@email.com');
 
 -- Create Instructor, will get id 1
 INSERT INTO instructor (name) VALUES ('HARRY');
+INSERT INTO instructor (name) VALUES ('HERMIONE');
 
 -- Create 3 teaching teams with id 1,2,3
 INSERT INTO teaching_team (teaching_team_id) VALUES (1);
 INSERT INTO teaching_team (teaching_team_id) VALUES (2);
 INSERT INTO teaching_team (teaching_team_id) VALUES (3);
 
-
--- TODO - Below should be handled by rule?
-
 -- Assign instructor with id 1 to teaching team 1 and 2
 INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (1, 1);
 INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (2, 1);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (1,2);
+
 
 -- Enrollment TODO
--- Teaches TODO
+
+
+-- Asssign teaching team to course 
+insert into teaches (teaching_team_id, course_id) values (1,1);
 
 
 --######### TESTING #########
@@ -135,6 +160,7 @@ INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (2,
 
 -- Should fail
 -- Trainee with same name, email cannot be inserted multiple times
+--insert into trainee (name, email) values ('Mathias', 'm@email.com');
 
 -- Should fail
 -- Instructor with same name cannot be inserted multiple times
@@ -149,6 +175,8 @@ INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (2,
 
 -- Enrollment TODO?
 
--- Teaches TODO?
+-- Should fail
+-- Assigning teaching team 2 to course 2 should not be possible (cause team 2 only has 1 member)
+-- insert into teaches (teaching_team_id, course_id) values (2,2); 
 
 

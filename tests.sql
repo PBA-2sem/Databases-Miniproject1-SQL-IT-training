@@ -1,0 +1,20 @@
+
+--######### TESTING #########
+-- Should fail
+-- Course with same name, presence, season, year cannot be inserted multiple times
+-- insert into course (name,presence, season, year) values ('Databases', true, 'Spring', 2020);
+-- Should fail
+-- Trainee with same name, email cannot be inserted multiple times
+--insert into trainee (name, email) values ('Mathias', 'm@email.com');
+-- Should fail
+-- Instructor with same name cannot be inserted multiple times
+--INSERT INTO instructor (name) VALUES ('HARRY');
+-- TODO?
+-- teaching_team
+-- Should fail
+-- Instructor with id 1 cannot be assigned to teaching team 3, as he is already assigned to teaching team 1 and 2
+-- INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (3, 1);
+-- Enrollment TODO?
+-- Should fail
+-- Assigning teaching team 2 to course 2 should not be possible (cause team 2 only has 1 member)
+-- insert into teaches (teaching_team_id, course_id) values (2,2);

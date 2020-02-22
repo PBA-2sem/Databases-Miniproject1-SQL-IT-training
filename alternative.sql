@@ -58,17 +58,12 @@ CREATE TABLE teaches (
     PRIMARY KEY (teaching_team_id, course_id)
 );
 
+
 --######### CONSTRAINTS #########
 
 ALTER TABLE course ADD CONSTRAINT unique_courses UNIQUE (name, presence, season, year);
 ALTER TABLE trainee ADD CONSTRAINT unique_trainees UNIQUE (name, email);
 ALTER TABLE instructor ADD CONSTRAINT unique_instructors UNIQUE (name);
-
---TODO
--- teaching team
--- teachingteam_instructor
--- enrollment
--- teaches
 
 
 --######### FUNCTIONS #########
@@ -107,8 +102,11 @@ insert into course (name,presence, season, year) values ('Test', false, 'Spring'
 insert into course (name,presence, season, year) values ('Large Systems', false, 'Spring', 2020); -- online
 insert into course (name,presence, season, year) values ('System Integration', false, 'Spring', 2020); -- online
 
--- Create Trainee TODO
-
+-- Create Trainee
+insert into trainee (name, email) values ('Mathias', 'm@email.com');
+insert into trainee (name, email) values ('Stanislav', 's@email.com');
+insert into trainee (name, email) values ('Andreas', 'a@email.com');
+insert into trainee (name, email) values ('Alexander', 'aa@email.com');
 
 -- Create Instructor, will get id 1
 INSERT INTO instructor (name) VALUES ('HARRY');
@@ -118,12 +116,14 @@ INSERT INTO teaching_team (teaching_team_id) VALUES (1);
 INSERT INTO teaching_team (teaching_team_id) VALUES (2);
 INSERT INTO teaching_team (teaching_team_id) VALUES (3);
 
+
+-- TODO - Below should be handled by rule?
+
 -- Assign instructor with id 1 to teaching team 1 and 2
 INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (1, 1);
 INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (2, 1);
 
 -- Enrollment TODO
-
 -- Teaches TODO
 
 
@@ -140,15 +140,15 @@ INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (2,
 -- Instructor with same name cannot be inserted multiple times
 --INSERT INTO instructor (name) VALUES ('HARRY');
 
--- TODO NOT NEEDED?
+-- TODO?
 -- teaching_team 
 
 -- Should fail
 -- Instructor with id 1 cannot be assigned to teaching team 3, as he is already assigned to teaching team 1 and 2
 -- INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (3, 1); 
 
--- Enrollment TODO
+-- Enrollment TODO?
 
--- Teaches TODO
+-- Teaches TODO?
 
 

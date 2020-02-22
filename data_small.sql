@@ -58,7 +58,19 @@ INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id)
 INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id)
     VALUES (1, 2);
 
--- Enrollment TODO
+-- Enrollment 
+-- Adds Trainee to one offline course and three online course
+INSERT INTO enrollment (trainee_id, course_id, graduated) VALUES (3, 1, FALSE); -- "Offline"
+INSERT INTO enrollment (trainee_id, course_id, graduated) VALUES (3, 2, FALSE); -- "Online"
+INSERT INTO enrollment (trainee_id, course_id, graduated) VALUES (3, 3, FALSE);	-- "Online"
+INSERT INTO enrollment (trainee_id, course_id, graduated) VALUES (3, 4, FALSE);	-- "Online"
+
+-- Adds the trainee to an additional offline and online course, should fail do to limitaions
+INSERT INTO enrollment (trainee_id, course_id, graduated) VALUES (3, 5, FALSE); -- "Offline"
+INSERT INTO enrollment (trainee_id, course_id, graduated) VALUES (3, 6, FALSE); -- "Online"
+
+
+
 -- Asssign teaching team to course
 
 INSERT INTO teaches (teaching_team_id, course_id)

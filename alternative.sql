@@ -1,33 +1,36 @@
-######### TABLES #########
+--######### TABLES #########
 
-DROP TABLE IF EXISTS course;
+drop type if exists season cascade;
+create type season as enum ('Spring', 'Summer', 'Fall', 'Winter');
+
+DROP TABLE IF EXISTS course CASCADE;
 CREATE TABLE course (
-    course_id INT AUTO_INCREMENT PRIMARY KEY,
+    course_id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
     presence BOOLEAN NOT NULL,
-    start_at DATE NOT NULL,
-    end_at DATE NOT NULL,
+    season season not null, 
     year INT NOT NULL
 );
 
-DROP TABLE IF EXISTS trainee;
+DROP TABLE IF EXISTS trainee CASCADE;
 CREATE TABLE trainee (
-    trainee_id INT AUTO_INCREMENT PRIMARY KEY,
+    trainee_id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL
 );
 
-DROP TABLE IF EXISTS instructor;
+DROP TABLE IF EXISTS instructor CASCADE;
 CREATE TABLE instructor (
-    instructor_id INT AUTO_INCREMENT PRIMARY KEY,
+    instructor_id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL
 );
 
-DROP TABLE IF EXISTS teaching_team;
+DROP TABLE IF EXISTS teaching_team CASCADE;
 CREATE TABLE teaching_team (
-    teaching_team_id INT AUTO_INCREMENT PRIMARY KEY
+    teaching_team_id SERIAL PRIMARY KEY
 );
 
-DROP TABLE IF EXISTS teachingteam_instructor;
+DROP TABLE IF EXISTS teachingteam_instructor CASCADE;
 CREATE TABLE teachingteam_instructor (
     teaching_team_id INT,
     instructor_id INT,
@@ -36,7 +39,7 @@ CREATE TABLE teachingteam_instructor (
     PRIMARY KEY (teaching_team_id, instructor_id)
 );
 
-DROP TABLE IF EXISTS enrollment;
+DROP TABLE IF EXISTS enrollment CASCADE;
 CREATE TABLE enrollment (
     trainee_id INT,
     course_id INT,
@@ -46,7 +49,7 @@ CREATE TABLE enrollment (
     PRIMARY KEY (trainee_id, course_id)
 );
 
-DROP TABLE IF EXISTS teaches;
+DROP TABLE IF EXISTS teaches CASCADE;
 CREATE TABLE teaches (
     teaching_team_id INT,
     course_id INT,
@@ -55,45 +58,98 @@ CREATE TABLE teaches (
     PRIMARY KEY (teaching_team_id, course_id)
 );
 
-######### CONSTRAINTS #########
+--######### CONSTRAINTS #########
 
-# Den nedstående DELIMITER TING var åbenbart nødvendig for at syntaksen
-# for Trigger'en var valid. wodoo magic
+ALTER TABLE course ADD CONSTRAINT unique_courses UNIQUE (name, presence, season, year);
+ALTER TABLE trainee ADD CONSTRAINT unique_trainees UNIQUE (name, email);
+ALTER TABLE instructor ADD CONSTRAINT unique_instructors UNIQUE (name);
 
-DELIMITER /
-Create Trigger MaxTwoTeamsPerInstructor
-    Before Insert
-    On teachingteam_instructor 
-    For Each Row
-Begin
+--TODO
+-- teaching team
+-- teachingteam_instructor
+-- enrollment
+-- teaches
 
-If Exists (
-	Select 1
-	From teachingteam_instructor
-	Where instructor_id = New.instructor_id
-	Having Count(*) >= 2 -- Max count - 1
-	)
-THEN	
-   SIGNAL SQLSTATE '45000' 
-   SET MESSAGE_TEXT = 'Instructor can only be allocated to two teaching teams at maximum';
+
+--######### FUNCTIONS #########
+
+CREATE OR REPLACE FUNCTION check_max_two_teams_for_instructors()
+	RETURNS TRIGGER AS
+$$
+BEGIN
+IF EXISTS (SELECT 1 
+FROM teachingteam_instructor
+WHERE instructor_id = NEW.instructor_id
+HAVING COUNT(*)>= 2)
+THEN 
+RAISE EXCEPTION 'Instructor can only be allocated to two teaching teams at maximum'; 
 END IF;
+RETURN NEW;
+END;
+$$
+LANGUAGE 'plpgsql';
 
-End; /
+
+--######### TRIGGERS #########
+
+Create Trigger MaxTwoTeamsPerInstructor
+BEFORE INSERT
+ON teachingteam_instructor 
+FOR EACH ROW
+EXECUTE PROCEDURE check_max_two_teams_for_instructors();
 
 
-INSERT INTO teaching_team (teaching_team_id) VALUES (0); /
-INSERT INTO teaching_team (teaching_team_id) VALUES (0); / 
-INSERT INTO teaching_team (teaching_team_id) VALUES (0); /
+--######### DUMMY DATA #########
 
-INSERT INTO instructor (name) VALUES ('HARRY'); /
+-- Create Course
+insert into course (name,presence, season, year) values ('Databases', true, 'Spring', 2020); -- "offline"
+insert into course (name,presence, season, year) values ('Test', false, 'Spring', 2020); -- online
+insert into course (name,presence, season, year) values ('Large Systems', false, 'Spring', 2020); -- online
+insert into course (name,presence, season, year) values ('System Integration', false, 'Spring', 2020); -- online
 
-INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (1, 1) /
-INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (2, 1) /
+-- Create Trainee TODO
 
-# Instructor med ID 1 kan nu ikke sættes på teaching team 3, da han allerede er på 1 & 2.
-INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (3, 1) /
 
-select * from teaching_team; /
-select * from teachingteam_instructor; /
+-- Create Instructor, will get id 1
+INSERT INTO instructor (name) VALUES ('HARRY');
+
+-- Create 3 teaching teams with id 1,2,3
+INSERT INTO teaching_team (teaching_team_id) VALUES (1);
+INSERT INTO teaching_team (teaching_team_id) VALUES (2);
+INSERT INTO teaching_team (teaching_team_id) VALUES (3);
+
+-- Assign instructor with id 1 to teaching team 1 and 2
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (1, 1);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (2, 1);
+
+-- Enrollment TODO
+
+-- Teaches TODO
+
+
+--######### TESTING #########
+
+-- Should fail
+-- Course with same name, presence, season, year cannot be inserted multiple times
+-- insert into course (name,presence, season, year) values ('Databases', true, 'Spring', 2020);
+
+-- Should fail
+-- Trainee with same name, email cannot be inserted multiple times
+
+-- Should fail
+-- Instructor with same name cannot be inserted multiple times
+--INSERT INTO instructor (name) VALUES ('HARRY');
+
+-- TODO NOT NEEDED?
+-- teaching_team 
+
+-- Should fail
+-- Instructor with id 1 cannot be assigned to teaching team 3, as he is already assigned to teaching team 1 and 2
+-- INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (3, 1); 
+
+-- Enrollment TODO
+
+-- Teaches TODO
+
 
 

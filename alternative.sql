@@ -152,4 +152,3 @@ INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (2,
 -- Teaches TODO
 
 
-

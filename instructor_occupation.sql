@@ -1,38 +1,30 @@
---Search names of graduates that have completed (graduated) a specific course
--- select trainees_graduated_course ('Databases')
-CREATE OR REPLACE FUNCTION trainees_graduated_course (course_name text)
-RETURNS setof varchar as 
-	$$ 
-	begin 
-	return query (
-		select t.name 
-		from trainee t
-		inner join enrollment e
-		on e.graduated = true
-		and 
-		e.course_id = (select c.course_id 
-		from course c
-		where c.name = course_name));
-	END
-	$$
-LANGUAGE 'plpgsql';
-
-
-drop function instructor_occupation(instructor_name  text, season text, year int);
---Occupation of instructors during a certain period (season + year)
-CREATE OR REPLACE FUNCTION instructor_occupation(instructor_name  text, season text, year int)
-returns setof int as 
+-- Occupation of instructors during a certain period (season + year)
+-- find instructor_id from given instructor_name, then
+-- find instructors teaching_team_ids from instructor_id, then
+-- find instructors course_id from teaching_team_id, then
+-- find instructors course name from matching given period_season & course_year
+CREATE OR REPLACE FUNCTION instructor_occupation(instructor_name  text, period_season season, course_year int)
+returns setof varchar as 
 $$ 
 begin 
-return query ( 
+return query (
+select c2.name from course c2
+where (c2.season = period_season
+and 
+c2.year = course_year
+and
+c2.course_id IN (
+select  course_id 
+from teaches t2
+where t2.teaching_team_id IN (
 select ti.teaching_team_id from teachingteam_instructor ti
 where ti.instructor_id = (
-	select i.instructor_id 
-	from instructor i
-	 where i.name = instructor_name));
+select i.instructor_id 
+from instructor i
+ where i.name = instructor_name)))
+));
 END
 $$
 LANGUAGE 'plpgsql';
-  -- de 2 teaching teams som harry er på - TODO corse de teams er på..
 
-select instructor_occupation('HARRY', 'Spring',2020);
+--select instructor_occupation('HARRY', 'Spring',2020);

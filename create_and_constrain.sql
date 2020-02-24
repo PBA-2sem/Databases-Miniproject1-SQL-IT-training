@@ -80,7 +80,29 @@ ALTER TABLE trainee
 ALTER TABLE instructor
     ADD CONSTRAINT unique_instructors UNIQUE (name);
 
+   
 --######### FUNCTIONS #########
+--Search names of graduates that have completed (graduated) a specific course
+CREATE OR REPLACE FUNCTION trainees_graduated_course (course_name text)
+RETURNS setof varchar as 
+	$$ 
+	begin 
+	return query (
+		select t.name 
+		from trainee t
+		inner join enrollment e
+		on e.graduated = true
+		and 
+		e.course_id = (select c.course_id 
+		from course c
+		where c.name = course_name));
+	END
+	$$
+LANGUAGE 'plpgsql';
+-- select trainees_graduated_course ('Databases')
+
+
+--######### FUNCTIONS (TRIGGERED) #########
 CREATE OR REPLACE FUNCTION check_max_two_teams_for_instructors ()
     RETURNS TRIGGER
     AS $$
@@ -120,6 +142,7 @@ END IF;
 END;
 $$
 LANGUAGE 'plpgsql';
+
 
 --######### TRIGGERS #########
 CREATE TRIGGER MaxTwoTeamsPerInstructor

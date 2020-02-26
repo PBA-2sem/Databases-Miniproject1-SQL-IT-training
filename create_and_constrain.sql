@@ -80,33 +80,38 @@ ALTER TABLE trainee
 ALTER TABLE instructor
     ADD CONSTRAINT unique_instructors UNIQUE (name);
 
-   
 --######### FUNCTIONS #########
 --Search names of graduates that have completed (graduated) a specific course
+
 CREATE OR REPLACE FUNCTION trainees_graduated_course (course_name text)
-RETURNS setof varchar as 
-	$$ 
-	begin 
-	return query (
-		select t.name 
-		from trainee t
-		inner join enrollment e
-		on e.graduated = true
-		and 
-		e.course_id = (select c.course_id 
-		from course c
-		where c.name = course_name));
-	END
-	$$
+    RETURNS SETOF varchar
+    AS $$
+BEGIN
+    RETURN query (
+        SELECT
+            t.name
+        FROM
+            trainee t
+            INNER JOIN enrollment e ON e.graduated = TRUE
+                AND e.course_id = (
+                    SELECT
+                        c.course_id
+                    FROM
+                        course c
+                WHERE
+                    c.name = course_name));
+END
+$$
 LANGUAGE 'plpgsql';
+
 -- select trainees_graduated_course ('Databases')
-
-
 --######### FUNCTIONS (TRIGGERED) #########
+
 CREATE OR REPLACE FUNCTION check_max_two_teams_for_instructors ()
     RETURNS TRIGGER
     AS $$
 BEGIN
+    LOCK TABLE teachingteam_instructor;
     IF EXISTS (
         SELECT
             1
@@ -143,6 +148,119 @@ END;
 $$
 LANGUAGE 'plpgsql';
 
+CREATE OR REPLACE FUNCTION max_100_trainees_per_course ()
+    RETURNS TRIGGER
+    AS $$
+BEGIN
+    LOCK TABLE enrollment;
+    IF EXISTS (
+        SELECT
+            1
+        FROM
+            enrollment
+        WHERE
+            course_id = NEW.course_id
+        HAVING
+            COUNT(*) >= 100) THEN
+    RAISE EXCEPTION 'A course must at maximum enroll 100 trainees';
+END IF;
+    RETURN NEW;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+-- CREATE OR REPLACE FUNCTION check_max_courses_for_trainee ()
+--     RETURNS TRIGGER
+--     AS $$
+-- DECLARE
+-- BEGIN
+--     IF ((
+--         SELECT
+--             presence
+--         FROM
+--             course
+--         WHERE
+--             course_id = NEW.course_id) = 'false') THEN
+--         IF EXISTS (
+--             SELECT
+--                 1
+--             FROM
+--                 enrollment
+--                 JOIN course ON (enrollment.course_id = course.course_id)
+--             WHERE
+--                 course.presence = 'false'
+--                 AND enrollment.trainee_id = NEW.trainee_id
+--             HAVING
+--                 COUNT(*) >= 3) THEN
+--         RAISE EXCEPTION 'Trainee is already assigned to 3 online courses';
+--     END IF;
+-- END IF;
+--     IF ((
+--         SELECT
+--             presence
+--         FROM
+--             course
+--         WHERE
+--             course_id = NEW.course_id) = 'true') THEN
+--         IF EXISTS (
+--             SELECT
+--                 1
+--             FROM
+--                 enrollment
+--                 JOIN course ON (enrollment.course_id = course.course_id)
+--             WHERE
+--                 course.presence = 'true'
+--                 AND enrollment.trainee_id = NEW.trainee_id
+--             HAVING
+--                 COUNT(*) >= 1) THEN
+--         RAISE EXCEPTION 'Trainee is already assigned to an offline course';
+--     END IF;
+-- END IF;
+--     RAISE NOTICE 'You added %', (
+--         SELECT
+--             name
+--         FROM
+--             trainee
+--         WHERE
+--             trainee_id = NEW.trainee_id);
+--     RETURN NEW;
+-- END;
+-- $$
+-- LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION instructor_occupation (instructor_name text, period_season season, course_year int)
+    RETURNS SETOF varchar
+    AS $$
+BEGIN
+    RETURN query (
+        SELECT
+            c2.name
+        FROM
+            course c2
+        WHERE (c2.season = period_season
+            AND c2.year = course_year
+            AND c2.course_id IN (
+                SELECT
+                    course_id
+                FROM
+                    teaches t2
+                WHERE
+                    t2.teaching_team_id IN (
+                        SELECT
+                            ti.teaching_team_id
+                        FROM
+                            teachingteam_instructor ti
+                        WHERE
+                            ti.instructor_id = (
+                                SELECT
+                                    i.instructor_id
+                                FROM
+                                    instructor i
+                                WHERE
+                                    i.name = instructor_name)))));
+END
+$$
+LANGUAGE 'plpgsql';
 
 --######### TRIGGERS #########
 CREATE TRIGGER MaxTwoTeamsPerInstructor
@@ -154,3 +272,13 @@ CREATE TRIGGER MinTwoInstructorPerTeachingTeam
     BEFORE INSERT ON teaches
     FOR EACH ROW
     EXECUTE PROCEDURE min_two_instructors_per_teaching_team ();
+
+CREATE TRIGGER Max100TraineesPerCourse
+    BEFORE INSERT ON enrollment
+    FOR EACH ROW
+    EXECUTE PROCEDURE max_100_trainees_per_course ();
+
+-- CREATE TRIGGER CheckAvailability
+--     BEFORE INSERT ON enrollment
+--     FOR EACH ROW
+--     EXECUTE PROCEDURE check_max_courses_for_trainee ();

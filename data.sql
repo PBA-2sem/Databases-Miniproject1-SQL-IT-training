@@ -17,16 +17,16 @@ INSERT INTO course (name, presence, season, year) VALUES ('Large Systems', TRUE,
 
 --- Offline --
 INSERT INTO course (name, presence, season, year) VALUES ('Test', FALSE, 'Winter', 2019); -- 1 - 100
-INSERT INTO course (name, presence, season, year) VALUES ('Test', FALSE, 'Spring', 2020); -- 300 - 399
+INSERT INTO course (name, presence, season, year) VALUES ('Test', FALSE, 'Spring', 2020); -- 300 - 395
 
 INSERT INTO course (name, presence, season, year) VALUES ('Databases', FALSE, 'Winter', 2019); -- 1 - 100
-INSERT INTO course (name, presence, season, year) VALUES ('Databases', FALSE, 'Spring', 2020); -- 300 - 399
+INSERT INTO course (name, presence, season, year) VALUES ('Databases', FALSE, 'Spring', 2020); -- 300 - 394
 
 INSERT INTO course (name, presence, season, year) VALUES ('Large Systems', FALSE, 'Winter', 2019); -- 1 - 100
-INSERT INTO course (name, presence, season, year) VALUES ('Large Systems', FALSE, 'Spring', 2020); -- 300 - 399 
+INSERT INTO course (name, presence, season, year) VALUES ('Large Systems', FALSE, 'Spring', 2020); -- 300 - 394 
 
 INSERT INTO course (name, presence, season, year) VALUES ('System Integration', FALSE, 'Winter', 2019); -- 100 - 200
-INSERT INTO course (name, presence, season, year) VALUES ('System Integration', FALSE, 'Spring', 2020); -- 400 - 499
+INSERT INTO course (name, presence, season, year) VALUES ('System Integration', FALSE, 'Spring', 2020); -- 400 - 489
 
 -- Create Trainee
 INSERT INTO trainee (name, email) VALUES ('Mathias', 'm@email.com');
@@ -2576,11 +2576,6 @@ insert into enrollment (trainee_id, course_id, graduated) values (391, 13, FALSE
 insert into enrollment (trainee_id, course_id, graduated) values (392, 13, FALSE);
 insert into enrollment (trainee_id, course_id, graduated) values (393, 13, FALSE);
 insert into enrollment (trainee_id, course_id, graduated) values (394, 13, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (395, 13, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (396, 13, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (397, 13, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (398, 13, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (399, 13, FALSE);
 
 insert into enrollment (trainee_id, course_id, graduated) values (300, 15, FALSE);
 insert into enrollment (trainee_id, course_id, graduated) values (301, 15, FALSE);
@@ -2677,11 +2672,6 @@ insert into enrollment (trainee_id, course_id, graduated) values (391, 15, FALSE
 insert into enrollment (trainee_id, course_id, graduated) values (392, 15, FALSE);
 insert into enrollment (trainee_id, course_id, graduated) values (393, 15, FALSE);
 insert into enrollment (trainee_id, course_id, graduated) values (394, 15, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (395, 15, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (396, 15, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (397, 15, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (398, 15, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (399, 15, FALSE);
 
 insert into enrollment (trainee_id, course_id, graduated) values (300, 17, FALSE);
 insert into enrollment (trainee_id, course_id, graduated) values (301, 17, FALSE);
@@ -2778,11 +2768,6 @@ insert into enrollment (trainee_id, course_id, graduated) values (391, 17, FALSE
 insert into enrollment (trainee_id, course_id, graduated) values (392, 17, FALSE);
 insert into enrollment (trainee_id, course_id, graduated) values (393, 17, FALSE);
 insert into enrollment (trainee_id, course_id, graduated) values (394, 17, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (395, 17, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (396, 17, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (397, 17, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (398, 17, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (399, 17, FALSE);
 
 insert into enrollment (trainee_id, course_id, graduated) values (100, 18, TRUE);
 insert into enrollment (trainee_id, course_id, graduated) values (101, 18, TRUE);
@@ -2874,16 +2859,6 @@ insert into enrollment (trainee_id, course_id, graduated) values (186, 18, TRUE)
 insert into enrollment (trainee_id, course_id, graduated) values (187, 18, TRUE);
 insert into enrollment (trainee_id, course_id, graduated) values (188, 18, TRUE);
 insert into enrollment (trainee_id, course_id, graduated) values (189, 18, TRUE);
-insert into enrollment (trainee_id, course_id, graduated) values (190, 18, TRUE);
-insert into enrollment (trainee_id, course_id, graduated) values (191, 18, TRUE);
-insert into enrollment (trainee_id, course_id, graduated) values (192, 18, TRUE);
-insert into enrollment (trainee_id, course_id, graduated) values (193, 18, TRUE);
-insert into enrollment (trainee_id, course_id, graduated) values (194, 18, TRUE);
-insert into enrollment (trainee_id, course_id, graduated) values (195, 18, TRUE);
-insert into enrollment (trainee_id, course_id, graduated) values (196, 18, TRUE);
-insert into enrollment (trainee_id, course_id, graduated) values (197, 18, TRUE);
-insert into enrollment (trainee_id, course_id, graduated) values (198, 18, TRUE);
-insert into enrollment (trainee_id, course_id, graduated) values (199, 18, TRUE);
 
 insert into enrollment (trainee_id, course_id, graduated) values (400, 19, FALSE);
 insert into enrollment (trainee_id, course_id, graduated) values (401, 19, FALSE);
@@ -2971,17 +2946,3 @@ insert into enrollment (trainee_id, course_id, graduated) values (482, 19, FALSE
 insert into enrollment (trainee_id, course_id, graduated) values (483, 19, FALSE);
 insert into enrollment (trainee_id, course_id, graduated) values (484, 19, FALSE);
 insert into enrollment (trainee_id, course_id, graduated) values (485, 19, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (486, 19, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (487, 19, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (488, 19, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (489, 19, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (490, 19, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (491, 19, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (492, 19, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (493, 19, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (494, 19, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (495, 19, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (496, 19, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (497, 19, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (498, 19, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (499, 19, FALSE);

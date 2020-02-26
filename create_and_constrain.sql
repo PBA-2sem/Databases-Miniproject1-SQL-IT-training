@@ -15,7 +15,7 @@ CREATE TABLE course (
     name varchar(255) NOT NULL,
     presence boolean NOT NULL,
     season season NOT NULL,
-    year int NOT NULL
+    year SMALLINT NOT NULL
 );
 
 DROP TABLE IF EXISTS trainee CASCADE;

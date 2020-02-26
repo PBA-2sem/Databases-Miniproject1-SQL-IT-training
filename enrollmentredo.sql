@@ -16,10 +16,11 @@ CREATE OR REPLACE FUNCTION check_max_courses_for_trainee ()
 	AND course.season = (SELECT course.season FROM course WHERE course_id = NEW.course_id)
 	HAVING COUNT(*) >=1)
  THEN
- 	IF((SELECT presence FROM course WHERE course_id = NEW.course_id) = 'false')
+ 	IF((SELECT presence FROM course  WHERE course_id = NEW.course_id) = 'false')
 	THEN
 	RAISE NOTICE 'in false';
- 		IF(SELECT 1 FROM enrollment WHERE trainee_id = NEW.trainee_id 
+ 		IF(SELECT 1 FROM enrollment JOIN course ON (enrollment.course_id = course.course_id)
+		WHERE trainee_id = NEW.trainee_id 
 		AND graduated = false 
 		AND course.year = (SELECT course.year FROM course WHERE course_id = NEW.course_id)
 		AND course.season = (SELECT course.season FROM course WHERE course_id = NEW.course_id)
@@ -31,7 +32,8 @@ CREATE OR REPLACE FUNCTION check_max_courses_for_trainee ()
 	IF((SELECT presence FROM course WHERE course_id = NEW.course_id) = 'true')
 		THEN
 			RAISE NOTICE 'in true';
-			IF(SELECT 1 FROM enrollment WHERE trainee_id = NEW.trainee_id
+			IF(SELECT 1 FROM enrollment JOIN course on (enrollment.course_id = course.course_id)
+			WHERE trainee_id = NEW.trainee_id
 			AND graduated = false 
 			AND course.year = (SELECT course.year FROM course WHERE course_id = NEW.course_id)
 			AND course.season = (SELECT course.season FROM course WHERE course_id = NEW.course_id)

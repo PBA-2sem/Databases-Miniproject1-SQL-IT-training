@@ -40,9 +40,15 @@
 -- and graduated = false
 -- ORDER BY count(enrollment.course_id) ASC;
  
-
--- Should 
 --######### TESTING USER RIGHTS #########
 
--- SUPERUSER (Principal / office clerk)
 -- INSTRUCTOR / TRAINEE
+-- insert into trainee (name, email) values ('Jeff', 'jeff@jeffmail.ru');
+-- select * from course;
+
+-- SUPERUSER (Principal / office clerk)
+-- insert into trainee (name, email) values ('Jeff', 'jeff@jeffmail.ru');
+-- select * from trainee t where t.name = 'jeff@jeffmail.ru';
+-- delete * from trainee t where t.name = 'jeff@jeffmail.ru';
+
+

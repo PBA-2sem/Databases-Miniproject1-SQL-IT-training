@@ -1,6 +1,6 @@
 --######### DUMMY DATA #########
 -- Create Course
--- Online --
+-- Offline -- ids: 1- 11 (current : 5, 9, 11)
 INSERT INTO course (name, presence, season, year) VALUES ('Databases', TRUE, 'Spring', 2019); -- 99
 INSERT INTO course (name, presence, season, year) VALUES ('Databases', TRUE, 'Summer', 2019); -- 100 - 199
 INSERT INTO course (name, presence, season, year) VALUES ('Databases', TRUE, 'Fall', 2019); -- 199 - 269
@@ -15,7 +15,7 @@ INSERT INTO course (name, presence, season, year) VALUES ('Test', TRUE, 'Spring'
 INSERT INTO course (name, presence, season, year) VALUES ('Large Systems', TRUE, 'Winter', 2019); -- 833 - 900
 INSERT INTO course (name, presence, season, year) VALUES ('Large Systems', TRUE, 'Spring', 2020); -- 900 - 1000
 
---- Offline --
+--- Online -- ids : 12 - 19 (current : 13, 15, 17, 19)
 INSERT INTO course (name, presence, season, year) VALUES ('Test', FALSE, 'Winter', 2019); -- 1 - 100
 INSERT INTO course (name, presence, season, year) VALUES ('Test', FALSE, 'Spring', 2020); -- 300 - 395
 

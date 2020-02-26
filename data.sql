@@ -1106,7 +1106,6 @@ INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (12
 INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (11, 20);
 INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (10, 21);
 INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (9, 22);
-INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (8, 23);
 INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (7, 24);
 INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (6, 25);
 INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (5, 26);
@@ -1114,6 +1113,36 @@ INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (4,
 INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (3, 28);
 INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (2, 29);
 INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (1, 30);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (15, 1);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (14, 2);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (13, 3);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (12, 4);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (11, 5);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (10, 6);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (9, 7);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (7, 9);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (6, 10);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (5, 11);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (4, 12);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (3, 13);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (2, 14);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (1, 15);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (1, 16);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (2, 17);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (3, 18);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (4, 19);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (5, 20);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (6, 21);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (7, 22);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (9, 24);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (10, 25);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (11, 26);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (12, 27);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (13, 28);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (14, 29);
+INSERT INTO teachingteam_instructor (teaching_team_id, instructor_id) VALUES (15, 30);
+
+
 
 
 -- Asssign teaching team to course
@@ -1124,7 +1153,6 @@ insert into teaches (teaching_team_id, course_id) values (4, 4);
 insert into teaches (teaching_team_id, course_id) values (5, 5);
 insert into teaches (teaching_team_id, course_id) values (6, 6);
 insert into teaches (teaching_team_id, course_id) values (7, 7);
-insert into teaches (teaching_team_id, course_id) values (8, 8);
 insert into teaches (teaching_team_id, course_id) values (9, 9);
 insert into teaches (teaching_team_id, course_id) values (10, 10);
 insert into teaches (teaching_team_id, course_id) values (11, 11);

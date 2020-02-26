@@ -75,10 +75,8 @@ ALTER TABLE course
     ADD CONSTRAINT unique_courses UNIQUE (name, presence, season, year);
 
 ALTER TABLE trainee
-    ADD CONSTRAINT unique_trainees UNIQUE (name, email);
+    ADD CONSTRAINT unique_trainees UNIQUE (email);
 
-ALTER TABLE instructor
-    ADD CONSTRAINT unique_instructors UNIQUE (name);
 
 --######### FUNCTIONS #########
 --Search names of graduates that have completed (graduated) a specific course
@@ -103,6 +101,7 @@ BEGIN
 END
 $$
 LANGUAGE 'plpgsql';
+
 
 -- select trainees_graduated_course ('Databases')
 --######### FUNCTIONS (TRIGGERED) #########

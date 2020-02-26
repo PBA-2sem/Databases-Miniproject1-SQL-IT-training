@@ -4,7 +4,7 @@ https://datsoftlyngby.github.io/soft2020spring/resources/975a760e-MP1-1.pdf
 
 ## Identified specifications
 - Courses have 12 week periods. We chose to split the year in four parts, spring, summer, fall, winter.
-- A max of 100 trainees per course, per season, per year.
+- A max of 100 trainees per course.
 - Instructors can belong in maximum two teaching teams with a minimum of two instructors.
 - A trainee can have one course with presence required or three online courses, not both, per season per year.
 

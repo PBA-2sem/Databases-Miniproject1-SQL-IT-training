@@ -2079,7 +2079,6 @@ insert into enrollment (trainee_id, course_id, graduated) values (898, 10, TRUE)
 insert into enrollment (trainee_id, course_id, graduated) values (899, 10, TRUE);
 
 insert into enrollment (trainee_id, course_id, graduated) values (900, 11, FALSE);
-insert into enrollment (trainee_id, course_id, graduated) values (901, 11, FALSE);
 insert into enrollment (trainee_id, course_id, graduated) values (902, 11, FALSE);
 insert into enrollment (trainee_id, course_id, graduated) values (903, 11, FALSE);
 insert into enrollment (trainee_id, course_id, graduated) values (904, 11, FALSE);

@@ -9,7 +9,7 @@
 
 -- Should fail
 -- Add Trainee number 101 to course (course 11 LSD)
--- insert into enrollement (trainee_id, course_id, graduated) values (11, 1, FALSE);
+-- insert into enrollment (trainee_id, course_id, graduated) values (11, 1, FALSE);
 
 -- Should fail
 -- Instructor with id 1 cannot be assigned to teaching team 3, as he is already assigned to teaching team 1 and 15
@@ -22,23 +22,27 @@
 --######### TESTING FUNCTIONS #########
 
 -- Should return instructor occupation in spring of 2020
--- select instructor_occupation('Rae', 'Spring', 2020);
+-- select instructor_occupation('Pierette', 'Spring', 2020);
 
+
+-- (this does not work with the new data... more than one row is returned)
+-- Should return names of students who graduated a specific course 
+-- select trainees_graduated_course('Databases'); 
 
 -- -- Should return most popular courses
--- SELECT (Select course.name from course where course_id = enrollment.course_id), 
+--SELECT (Select course.name from course where course_id = enrollment.course_id), 
 -- COUNT(enrollment.course_id) 
--- FROM enrollment 
--- GROUP BY name
--- ORDER BY count(course_id) desc
+--FROM enrollment 
+--GROUP BY name
+--ORDER BY count(course_id) desc
 
 -- -- Current availability: Returns all available courses by counting the numbers of attendees on the course
--- SELECT (Select name from course where course_id = enrollment.course_id), (Select season from course where course_id = enrollment.course_id),(Select "year" from course where course_id = enrollment.course_id),
--- 100-count(enrollment.course_id) AS "Availability"
--- From enrollment Group by enrollment.course_id, enrollment.graduated 
--- Having COUNT(*)<=99
--- and graduated = false
--- ORDER BY count(enrollment.course_id) ASC;
+--  SELECT (Select name from course where course_id = enrollment.course_id), (Select season from course where course_id = enrollment.course_id),(Select "year" from course where course_id = enrollment.course_id),
+--  100-count(enrollment.course_id) AS "Availability"
+--  From enrollment Group by enrollment.course_id, enrollment.graduated 
+--  Having COUNT(*)<=99
+--  and graduated = false
+--  ORDER BY count(enrollment.course_id) ASC;
  
 --######### TESTING USER RIGHTS #########
 
@@ -50,5 +54,3 @@
 -- insert into trainee (name, email) values ('Jeff', 'jeff@jeffmail.ru');
 -- select * from trainee t where t.name = 'jeff@jeffmail.ru';
 -- delete * from trainee t where t.name = 'jeff@jeffmail.ru';
-
-

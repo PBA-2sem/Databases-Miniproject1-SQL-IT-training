@@ -80,18 +80,19 @@ ALTER TABLE trainee
 
 --######### FUNCTIONS #########
 --Search names of graduates that have completed (graduated) a specific course
-
+drop function if exists trainees_graduated_course (course_name text);
 CREATE OR REPLACE FUNCTION trainees_graduated_course (course_name text)
-    RETURNS SETOF varchar
+    --RETURNS SETOF varchar
+       RETURNS TABLE (name varchar)
     AS $$
 BEGIN
     RETURN query (
-        SELECT
-            t.name
+        select 
+            distinct t.name
         FROM
             trainee t
             INNER JOIN enrollment e ON e.graduated = TRUE
-                AND e.course_id = (
+                AND e.course_id in (
                     SELECT
                         c.course_id
                     FROM
